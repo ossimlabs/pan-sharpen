@@ -28,6 +28,7 @@ class WebMappingService
 				'--bands', bands,
 				'--histogram-op', 'auto-minmax',
 				'--output-radiometry', 'U8',
+				'--writer-prop', 'create_external_geometry=false',
 				inputFile,
 				'--entry', entryId,
 				outputFile
