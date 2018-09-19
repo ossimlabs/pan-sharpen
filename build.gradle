@@ -28,6 +28,8 @@ repositories {
 dependencies {
 
     compile "org.ossim:joms:${System.getenv( 'OSSIM_VERSION' )}-${System.getenv( 'OSSIM_VERSION_TAG' )}"
+    compile group: 'com.vividsolutions', name: 'jts', version: '1.13'
+    
     compile 'org.webjars:openlayers:4.6.5'
     compile 'org.webjars.npm:github-com-walkermatt-ol-layerswitcher:2.0.0'
 

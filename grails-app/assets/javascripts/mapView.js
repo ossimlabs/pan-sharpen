@@ -26,11 +26,22 @@ var MapView = (function() {
             title: 'Overlays',
             layers: [
                 new ol.layer.Tile({
-                  title: 'Image',
+                  title: 'MultiSpectral',
                   source: new ol.source.TileWMS({
                     url: '/wms/getMap',
                     params: {
-                      'LAYERS': '',
+                      'LAYERS': '/data/psm-test/5V090205M0001912264B220000100072M_001508507.ntf',
+                      'VERSION': '1.1.1',
+                      'FORMAT': 'image/png'
+                    }
+                  })
+                }),
+                new ol.layer.Tile({
+                  title: 'Panchromatic',
+                  source: new ol.source.TileWMS({
+                    url: '/wms/getMap',
+                    params: {
+                      'LAYERS': '/data/psm-test/5V090205P0001912264B220000100282M_001508507.ntf',
                       'VERSION': '1.1.1',
                       'FORMAT': 'image/png'
                     }
