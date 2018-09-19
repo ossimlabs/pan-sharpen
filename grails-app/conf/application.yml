@@ -1,5 +1,7 @@
 ---
 grails:
+    servlet:
+        version: 3.0
     profile: web
     codegen:
         defaultPackage: pan.sharpen

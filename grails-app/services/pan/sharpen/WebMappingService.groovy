@@ -11,8 +11,6 @@ import java.awt.image.BufferedImage
 
 class WebMappingService
 {
-	def mapViewService
-	
 	def getMap( def params )
 	{
 		def width = params.find { it.key.toUpperCase() == 'WIDTH' }?.value?.toInteger()
@@ -48,6 +46,84 @@ class WebMappingService
 				'--writer-prop', 'create_external_geometry=false',
 				inputFile,
 				'--entry', entryId,
+				outputFile
+			]
+
+//		println cmd.join( ' ' )
+			
+			def start = System.currentTimeMillis()
+			def p = cmd.execute()
+			
+			p.consumeProcessOutput()
+			
+			def exitCode = p.waitFor()
+			def stop = System.currentTimeMillis()
+
+//		println exitCode
+//		println "${ stop - start }"
+			
+			def image = ImageIO.read( outputFile )
+			def g2d = outputImage.createGraphics()
+			
+			g2d.drawRenderedImage( image, new AffineTransform() )
+			g2d.dispose()
+			outputFile.delete()
+		}
+		
+		def ostream = new FastByteArrayOutputStream( width * height * 4 )
+		
+		ImageIO.write( outputImage, 'png', ostream )
+		
+		
+		[ contentType: 'image/png', file: ostream.inputStream ]
+	}
+	
+	def getPanSharpen( def params )
+	{
+		def width = params.find { it.key.toUpperCase() == 'WIDTH' }?.value?.toInteger()
+		def height = params.find { it.key.toUpperCase() == 'HEIGHT' }?.value?.toInteger()
+		def outputImage = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB )
+		def bbox = params.find { it.key.toUpperCase() == 'BBOX' }?.value
+		def srs = params.find { it.key.toUpperCase() == 'SRS' }?.value
+		def layers = params.find { it.key.toUpperCase() == 'LAYERS' }?.value
+		
+		def imageMetadata = layers?.split( ',' )?.inject( [ : ] ) { a, b ->
+			a[b] = new ImageMetadata( b )
+			a
+		}
+		
+		def bands = '3,2,1'
+		
+		def extent = imageMetadata.values().first().extent
+		
+		
+//		println "extent: ${ extent }"
+		
+		def coords = bbox?.split( ',' )*.toDouble()
+		
+		def geom1 = createGeom( coords, srs )
+		def geom2 = createGeom( extent, 'epsg:4326' )
+		
+		if ( geom1.intersects( geom2 ) )
+		{
+			def outputFile = File.createTempFile( 'oms', '.png', '/tmp' as File )
+			def files = layers?.split( ',' )
+			def msFile = files[0]
+			def panFile = files[1]
+			
+			def cmd = [ 'ossim-chipper', '--op', 'psm',
+				'--cut-width', width,
+				'--cut-height', height,
+				'--cut-wms-bbox', bbox,
+				'--srs', srs,
+				'--bands', bands,
+				'--histogram-op', 'auto-minmax',
+				'--output-radiometry', 'U8',
+				'--writer-prop', 'create_external_geometry=false',
+				'--resample-filter', 'gaussian',
+				msFile,
+				panFile,
+//    '--entry', entryId,
 				outputFile
 			]
 
