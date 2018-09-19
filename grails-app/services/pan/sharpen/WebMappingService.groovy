@@ -9,6 +9,8 @@ import javax.imageio.ImageIO
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 
+import org.ossim.oms.util.TransparentFilter
+
 class WebMappingService
 {
 	def getMap( def params )
@@ -63,6 +65,9 @@ class WebMappingService
 //		println "${ stop - start }"
 			
 			def image = ImageIO.read( outputFile )
+			
+			image = TransparentFilter.fixTransparency( new TransparentFilter(), image )
+			
 			def g2d = outputImage.createGraphics()
 			
 			g2d.drawRenderedImage( image, new AffineTransform() )
@@ -95,8 +100,7 @@ class WebMappingService
 		def bands = '3,2,1'
 		
 		def extent = imageMetadata.values().first().extent
-		
-		
+
 //		println "extent: ${ extent }"
 		
 		def coords = bbox?.split( ',' )*.toDouble()
@@ -141,6 +145,9 @@ class WebMappingService
 //		println "${ stop - start }"
 			
 			def image = ImageIO.read( outputFile )
+			
+			image = TransparentFilter.fixTransparency( new TransparentFilter(), image )
+			
 			def g2d = outputImage.createGraphics()
 			
 			g2d.drawRenderedImage( image, new AffineTransform() )
@@ -151,7 +158,6 @@ class WebMappingService
 		def ostream = new FastByteArrayOutputStream( width * height * 4 )
 		
 		ImageIO.write( outputImage, 'png', ostream )
-		
 		
 		[ contentType: 'image/png', file: ostream.inputStream ]
 	}
