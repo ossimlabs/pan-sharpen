@@ -10,6 +10,11 @@ import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 
 import org.ossim.oms.util.TransparentFilter
+import org.ossim.oms.image.omsRenderedImage
+import org.ossim.oms.image.omsImageSource
+
+import joms.oms.Chipper
+import joms.oms.ossimMemoryImageSource
 
 class WebMappingService
 {
@@ -26,6 +31,7 @@ class WebMappingService
 		def imageMetadata = new ImageMetadata( inputFile )
 		def entryId = 0
 		def bands = imageMetadata.rgbBands ? '3,2,1' : 1
+//		def bands = 'default'
 		
 		def extent = imageMetadata.extent
 		def coords = bbox?.split( ',' )*.toDouble()
@@ -50,8 +56,8 @@ class WebMappingService
 				'--entry', entryId,
 				outputFile
 			]
-
-//		println cmd.join( ' ' )
+			
+			println cmd.join( ' ' )
 			
 			def start = System.currentTimeMillis()
 			def p = cmd.execute()
@@ -98,7 +104,7 @@ class WebMappingService
 		}
 		
 		def bands = '3,2,1'
-		
+//		def bands = 'default'
 		def extent = imageMetadata.values().first().extent
 
 //		println "extent: ${ extent }"
@@ -110,41 +116,24 @@ class WebMappingService
 		
 		if ( geom1.intersects( geom2 ) )
 		{
-			def outputFile = File.createTempFile( 'oms', '.png', '/tmp' as File )
-			def files = layers?.split( ',' )
-			def msFile = files[0]
-			def panFile = files[1]
-			
-			def cmd = [ 'ossim-chipper', '--op', 'psm',
-				'--cut-width', width,
-				'--cut-height', height,
-				'--cut-wms-bbox', bbox,
-				'--srs', srs,
-				'--bands', bands,
-				'--histogram-op', 'auto-minmax',
-				'--output-radiometry', 'U8',
-				'--writer-prop', 'create_external_geometry=false',
-				'--resample-filter', 'gaussian',
-				msFile,
-				panFile,
-//    '--entry', entryId,
-				outputFile
+			Map<String, String> options = [
+				bands: bands,
+				cut_height: width as String,
+				cut_width: height as String,
+				cut_wms_bbox: bbox,
+				hist_op: 'auto-minmax',
+				operation: 'psm',
+				output_radiometry: 'U8',
+				resampler_filter: 'gaussian',
+				srs: srs?.split( ':' )?.last()
 			]
-
-//		println cmd.join( ' ' )
 			
-			def start = System.currentTimeMillis()
-			def p = cmd.execute()
+			layers?.split( ',' ).eachWithIndex { layer, i ->
+				options["image${ i }.file"] = layer
+			}
 			
-			p.consumeProcessOutput()
-			
-			def exitCode = p.waitFor()
-			def stop = System.currentTimeMillis()
-
-//		println exitCode
-//		println "${ stop - start }"
-			
-			def image = ImageIO.read( outputFile )
+//			def image = runChipperCLI( options )
+			def image = runChipperJNI( options )
 			
 			image = TransparentFilter.fixTransparency( new TransparentFilter(), image )
 			
@@ -152,7 +141,6 @@ class WebMappingService
 			
 			g2d.drawRenderedImage( image, new AffineTransform() )
 			g2d.dispose()
-			outputFile.delete()
 		}
 		
 		def ostream = new FastByteArrayOutputStream( width * height * 4 )
@@ -177,5 +165,101 @@ class WebMappingService
 		def geom1 = geometryFactory.createPolygon( points )
 		
 		geom1
+	}
+	
+	private BufferedImage runChipperJNI( Map<String, String> options )
+	{
+//		println options
+		
+		def bufferedImage
+		def chipper = new Chipper()
+		def start = System.currentTimeMillis()
+		
+		if ( chipper.initialize( options ) )
+		{
+//			println 'initialized'
+			def imageData = chipper.getChip( options )
+
+//    [ 'width', 'height', 'numberOfBands', 'scalarSizeInBytes',
+//        'sizePerBandInBytes', 'dataSizeInBytes' ].each {
+//        println "${it}: ${imageData[it]}"
+//    }
+			
+			if ( ( imageData != null ) && ( imageData.get() != null ) )
+			{
+				def cacheSource = new ossimMemoryImageSource()
+				cacheSource?.setImage( imageData )
+				
+				def renderedImage = new omsRenderedImage( new omsImageSource( cacheSource ) )
+//        def sampleModel = renderedImage.sampleModel
+				
+				bufferedImage = new BufferedImage(
+					renderedImage.colorModel, renderedImage.data, true, null )
+				
+				renderedImage = null
+				cacheSource?.delete(); cacheSource = null
+				imageData?.delete(); imageData = null
+				chipper?.delete(); chipper = null
+			}
+		}
+		else
+		{
+			System.err.println 'Error initializing!'
+		}
+		
+		def stop = System.currentTimeMillis()
+		
+		println "${ stop - start }"
+		chipper?.delete()
+
+//		if ( bufferedImage != null ) {
+//			ImageIO.write(bufferedImage, 'png', '/tmp/blah.png' as File)
+//		}
+		
+		bufferedImage
+	}
+	
+	
+	private BufferedImage runChipperCLI( Map<String, String> options )
+	{
+		def outputFile = File.createTempFile( 'oms', '.png', '/tmp' as File )
+		def files = options.findAll { it.key ==~ /image\d+\.file/ }?.collect { it.value }
+		
+		def msFile = files[0]
+		def panFile = files[1]
+		
+		def cmd = [ 'ossim-chipper', '--op', 'psm',
+			'--cut-width', options.cut_width,
+			'--cut-height', options.cut_height,
+			'--cut-wms-bbox', options.cut_wms_bbox,
+			'--srs', options.srs,
+			'--bands', options.bands,
+			'--histogram-op', 'auto-minmax',
+			'--output-radiometry', 'U8',
+			'--writer-prop', 'create_external_geometry=false',
+			'--resample-filter', 'sinc',
+			msFile,
+			panFile,
+//    '--entry', entryId,
+			outputFile
+		]
+		
+		println cmd.join( ' ' )
+		
+		def start = System.currentTimeMillis()
+		def p = cmd.execute()
+		
+		p.consumeProcessOutput()
+		
+		def exitCode = p.waitFor()
+		def stop = System.currentTimeMillis()
+
+//		println exitCode
+		println "${ stop - start }"
+		
+		def image = ImageIO.read( outputFile )
+		
+		outputFile.delete()
+		image
 	}
 }
