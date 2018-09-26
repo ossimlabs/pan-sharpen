@@ -9,6 +9,7 @@ repositories {
 
 dependencies {
 	compile "commons-beanutils:commons-beanutils:1.9.3"
+	compile 'com.amazonaws:aws-java-sdk:1.11.402'
 	
 	compile( "org.geoscript:geoscript-groovy:1.11.0" ) {
 		exclude module: "ehcache"
@@ -18,5 +19,6 @@ dependencies {
 		exclude module: "commons-beanutils"
 		exclude module: "gt-jdbc-spatialite"
 		exclude module: "miglayout"
+		exclude module: 'aws-java-sdk'
 	}
 }
