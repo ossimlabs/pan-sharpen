@@ -20,14 +20,24 @@ class ImageMetadata
 	
 	def getExtent( Integer entryId = 0 )
 	{
-		[ metadata["image${ entryId }.geometry.ll_lon"].toDouble(),
-			metadata["image${ entryId }.geometry.ll_lat"].toDouble(),
-			metadata["image${ entryId }.geometry.ur_lon"].toDouble(),
-			metadata["image${ entryId }.geometry.ur_lat"].toDouble() ]
+		def llLon = metadata["image${ entryId }.geometry.ll_lon"].toDouble()
+		def llLat = metadata["image${ entryId }.geometry.ll_lat"].toDouble()
+		def urLon = metadata["image${ entryId }.geometry.ur_lon"].toDouble()
+		def urLat = metadata["image${ entryId }.geometry.ur_lat"].toDouble()
+		
+		[ Math.min( llLon, urLon ),
+			Math.min( llLat, urLat ),
+			Math.max( llLon, urLon ),
+			Math.max( llLat, urLat ) ]
 	}
 	
 	def getRgbBands( Integer entryId = 0 )
 	{
 		metadata["image${ entryId }.rgb_bands"]
+	}
+	
+	def getNumberOfBands( Integer entryId = 0 )
+	{
+		metadata["image${ entryId }.number_output_bands"]?.toInteger()
 	}
 }

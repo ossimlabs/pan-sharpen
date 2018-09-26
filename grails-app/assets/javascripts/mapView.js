@@ -30,7 +30,8 @@ var MapView = (function() {
                   source: new ol.source.TileWMS({
                     url: '/wms/getMap',
                     params: {
-                      'LAYERS': '/data/psm-test/5V090205M0001912264B220000100072M_001508507.ntf',
+//                      'LAYERS': '/data/psm-test/5V090205M0001912264B220000100072M_001508507.ntf',
+                      'LAYERS': '/data/I00000116845_01/I00000116845_01_P001_MUL/18AUG30143528-M1BS_R2C1-I00000116845_01_P001.TIF',
                       'VERSION': '1.1.1',
                       'FORMAT': 'image/png'
                     }
@@ -42,7 +43,8 @@ var MapView = (function() {
                   source: new ol.source.TileWMS({
                     url: '/wms/getMap',
                     params: {
-                      'LAYERS': '/data/psm-test/5V090205P0001912264B220000100282M_001508507.ntf',
+//                      'LAYERS': '/data/psm-test/5V090205P0001912264B220000100282M_001508507.ntf',
+                      'LAYERS': '/data/I00000116845_01/I00000116845_01_P001_PAN/18AUG30143528-P1BS_R2C1-I00000116845_01_P001.TIF',
                       'VERSION': '1.1.1',
                       'FORMAT': 'image/png'
                     }
@@ -54,7 +56,8 @@ var MapView = (function() {
                   source: new ol.source.TileWMS({
                     url: '/wms/getPSM',
                     params: {
-                      'LAYERS': '/data/psm-test/5V090205M0001912264B220000100072M_001508507.ntf,/data/psm-test/5V090205P0001912264B220000100282M_001508507.ntf',
+//                      'LAYERS': '/data/psm-test/5V090205M0001912264B220000100072M_001508507.ntf,/data/psm-test/5V090205P0001912264B220000100282M_001508507.ntf',
+                      'LAYERS': '/data/I00000116845_01/I00000116845_01_P001_MUL/18AUG30143528-M1BS_R2C1-I00000116845_01_P001.TIF,/data/I00000116845_01/I00000116845_01_P001_PAN/18AUG30143528-P1BS_R2C1-I00000116845_01_P001.TIF',
                       'VERSION': '1.1.1',
                       'FORMAT': 'image/png'
                     }

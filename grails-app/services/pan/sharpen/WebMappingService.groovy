@@ -30,7 +30,10 @@ class WebMappingService
 		def inputFile = layers
 		def imageMetadata = new ImageMetadata( inputFile )
 		def entryId = 0
-		def bands = imageMetadata.rgbBands ? '3,2,1' : 1
+		
+		def numberOfBands = imageMetadata.numberOfBands
+		def bands = ( numberOfBands == 1 ) ? '1' : '3,2,1'
+
 //		def bands = 'default'
 		
 		def extent = imageMetadata.extent
@@ -57,6 +60,7 @@ class WebMappingService
 				options["image${ i }.file"] = layer
 			}
 			
+			println options
 //			def image = runChipperCLI( options )
 			def image = runChipperJNI( options )
 			
@@ -195,7 +199,7 @@ class WebMappingService
 		}
 		
 		def stop = System.currentTimeMillis()
-		
+
 //		println "${ stop - start }"
 		chipper?.delete()
 
@@ -212,8 +216,8 @@ class WebMappingService
 //		println options
 		
 		def outputFile = File.createTempFile( 'oms', '.png', '/tmp' as File )
-		def files = options.findAll { it.key ==~ /image\d+\.file/ }?.collect { it.value }?.join(' ')
-		
+		def files = options.findAll { it.key ==~ /image\d+\.file/ }?.collect { it.value }?.join( ' ' )
+
 //		def msFile = files[0]
 //		def panFile = files[1]
 		
@@ -233,7 +237,7 @@ class WebMappingService
 //    '--entry', entryId,
 			outputFile
 		]
-		
+
 //		println cmd.join( ' ' )
 		
 		def start = System.currentTimeMillis()
