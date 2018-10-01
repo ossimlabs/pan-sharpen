@@ -3,6 +3,7 @@ package pan.sharpen
 class MapViewController
 {
 	def mapViewService
+	def openLayersConfig
 	
 	def index()
 	{
@@ -14,7 +15,9 @@ class MapViewController
 		println extent
 		
 		[ mapViewParams: [
-			extent: extent
+			
+			extent: extent,
+			openLayersConfig: openLayersConfig
 		] ]
 	}
 }

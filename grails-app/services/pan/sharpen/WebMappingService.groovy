@@ -32,9 +32,8 @@ class WebMappingService
 		def entryId = 0
 		
 		def numberOfBands = imageMetadata.numberOfBands
-		def bands = ( numberOfBands == 1 ) ? '1' : '3,2,1'
-
-//		def bands = 'default'
+//		def bands = ( numberOfBands == 1 ) ? '1' : '3,2,1'
+		def bands = 'default'
 		
 		def extent = imageMetadata.extent
 		def coords = bbox?.split( ',' )*.toDouble()

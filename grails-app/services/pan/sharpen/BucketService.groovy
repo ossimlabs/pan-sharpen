@@ -22,12 +22,12 @@ class BucketService
 		
 		AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
 			.withCredentials( new ProfileCredentialsProvider( profileName ) )
-//                    .withRegion(clientRegion)
+//			.withRegion( clientRegion )
 			.build()
 		
 		ListObjectsV2Request request = new ListObjectsV2Request()
 			.withBucketName( bucketName )
-//    .withStartAfter( startAfter )
+			.withStartAfter( startAfter )
 			.withDelimiter( '/' )
 		
 		ListObjectsV2Result result

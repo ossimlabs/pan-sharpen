@@ -4,23 +4,33 @@
 //= require_self
 
 var MapView = (function() {
+    'use strict';
+
+    var baseMaps;
+    var overlays;
+
     function init( params ) {
+
+      if ( params.openLayersConfig.baseMaps ) {
+        baseMaps = params.openLayersConfig.baseMaps.map(function(item) {
+            return new ol.layer.Tile({
+                     title: item.title,
+                     type: 'base',
+                     source: new ol.source.TileWMS({
+                       url: item.url,
+                       params: item.params,
+                       options: item.options
+                     })
+                   });
+            } );
+      } else {
+        baseMaps = []
+      }
+
       var layers = [
         new ol.layer.Group({
             title: 'Base Maps',
-            layers: [
-                new ol.layer.Tile({
-                  title: 'OMAR Base Map',
-                  type: 'base',
-                  source: new ol.source.TileWMS({
-                    url: 'https://omar-dev.ossim.io/omar-mapproxy/service',
-                    params: {
-                      'LAYERS': 'o2-basemap-basic',
-                      'FORMAT': 'image/jpeg'
-                    }
-                  })
-                })
-            ]
+            layers: baseMaps
         }),
         new ol.layer.Group({
             title: 'Overlays',
