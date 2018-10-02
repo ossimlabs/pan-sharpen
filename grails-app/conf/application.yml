@@ -147,4 +147,20 @@ openlayers:
     # Uncomment the example below, and modify to add
     # a custom overlay layer
     overlays:
+    -   layerType: "tilewms"
+        title: "Collects"
+        url: "/collects/getTile"
+        params:
+            LAYERS: "collects"
+            FORMAT: "image/png"
+            VERSION: "1.1.1"
+        options:
+            visible: true
     zoomFilterChangeLevel: 10
+
+aws:
+    profileName: "svc_radiant_omar_1b"
+    bucketName: "dg-1b-3090-t1"
+
+collects:
+    databaseName: 'dg-bucket-db-prod'

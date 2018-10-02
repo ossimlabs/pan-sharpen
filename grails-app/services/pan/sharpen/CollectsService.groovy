@@ -1,5 +1,6 @@
 package pan.sharpen
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.util.FastByteArrayOutputStream
 
 
@@ -13,17 +14,22 @@ import static geoscript.style.Symbolizers.*
 
 class CollectsService
 {
+	@Value('${collects.databaseName}')
+	String databaseName
 	
 	def getTile( def params )
 	{
 		Integer width = params?.find { it.key.toUpperCase() == 'WIDTH' }?.value?.toInteger()
 		Integer height = params?.find { it.key.toUpperCase() == 'HEIGHT' }?.value?.toInteger()
 		List<Double> bbox = params?.find { it.key.toUpperCase() == 'BBOX' }?.value?.split( ',' )*.toDouble()
+		String srs =  params?.find { it.key.toUpperCase() == 'SRS' }?.value
+		String layers =  params?.find { it.key.toUpperCase() == 'LAYERS' }?.value
+		
 		def ostream = new FastByteArrayOutputStream( width * height * 4 )
 		
 		
-		def postgis = new PostGIS( 'dg-bucket-db-prod', user: 'postgres' )
-		def layer = postgis['collects']
+		def postgis = new PostGIS( databaseName, user: 'postgres' )
+		def layer = postgis[layers]
 		
 		layer.style = stroke( color: 'blue' ) + fill( opacity: 0 )
 		
@@ -31,7 +37,7 @@ class CollectsService
 			width: width,
 			height: height,
 			bounds: bbox,
-			proj: 'epsg:4326',
+			proj: srs,
 			layers: [
 				layer
 			]

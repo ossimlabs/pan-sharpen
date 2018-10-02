@@ -6,7 +6,52 @@
 var CollectsView = (function() {
     'use strict';
 
+    var baseMaps;
+    var overlays;
+
     function init( params ) {
+
+      if  ( params.openLayersConfig.baseMaps ) {
+         baseMaps = params.openLayersConfig.baseMaps.map(function(item) {
+               return new ol.layer.Tile({
+                  title: item.title,
+                  type: 'base',
+                  source: new ol.source.TileWMS({
+                    url: item.url,
+                    params: item.params,
+                    options: item.options
+                  }),
+                  extent: params.extent
+                })
+        });
+      } else {
+        baseMaps = [];
+      }
+
+      if  ( params.openLayersConfig.overlays ) {
+         overlays = params.openLayersConfig.overlays.map(function(item) {
+               return new ol.layer.Tile({
+                  title: item.title,
+                  source: new ol.source.TileWMS({
+                    url: item.url,
+                    params: item.params,
+                    options: item.options
+                  }),
+                  extent: params.extent
+                })
+        });
+      } else {
+        overlays = [];
+      }
+
+      overlays.push(
+         new ol.layer.Vector({
+            title: 'Area of Interest',
+            source: filterVectorSource,
+            visible: true,
+            extent: params.extent
+          })
+      );
 
       var filterVectorSource = new ol.source.Vector({
           wrapX: false
@@ -15,44 +60,11 @@ var CollectsView = (function() {
       var layers = [
         new ol.layer.Group({
             title: 'Base Maps',
-            layers: [
-                new ol.layer.Tile({
-                  title: 'OMAR Base Map',
-                  type: 'base',
-                  source: new ol.source.TileWMS({
-                    url: 'https://omar-dev.ossim.io/omar-mapproxy/service',
-                    params: {
-                      'LAYERS': 'o2-basemap-basic',
-                      'FORMAT': 'image/jpeg'
-                    }
-                  }),
-                  extent: params.extent
-                })
-            ]
+            layers: baseMaps
         }),
         new ol.layer.Group({
             title: 'Overlays',
-            layers: [
-                new ol.layer.Tile({
-                  title: 'Collects',
-                  source: new ol.source.TileWMS({
-                    url: '/collects/getTile',
-                    params: {
-                      'LAYERS': '',
-                      'VERSION': '1.1.1',
-                      'FORMAT': 'image/png'
-                    },
-                    wrapX: false
-                  }),
-                  visible: true
-                }),
-                new ol.layer.Vector({
-                  title: 'Area of Interest',
-                  source: filterVectorSource,
-                  visible: true,
-                  extent: params.extent
-                })
-            ]
+            layers: overlays
         })
       ];
 

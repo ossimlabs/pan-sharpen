@@ -7,17 +7,20 @@ import com.amazonaws.services.s3.model.GetObjectRequest
 import com.amazonaws.services.s3.model.GetObjectMetadataRequest
 import com.amazonaws.services.s3.model.ListObjectsV2Request
 import com.amazonaws.services.s3.model.ListObjectsV2Result
+import org.springframework.beans.factory.annotation.Value
+
 import static groovyx.gpars.GParsPool.withPool
 
 class BucketService
 {
+	@Value('${aws.bucketName}')
+	String bucketName
+	
+	@Value('${aws.profileName}')
+	String profileName
 	
 	def serviceMethod()
 	{
-		
-		
-		String bucketName = "dg-1b-3090-t1"
-		String profileName = "svc_radiant_omar_1b"
 		String startAfter = 'I00000140895_01'
 		
 		AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
