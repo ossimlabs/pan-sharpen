@@ -7,7 +7,7 @@ import org.springframework.core.convert.converter.Converter
 
 
 @ToString( includeNames = true )
-@ConfigurationProperties( prefix = "openlayers", ignoreInvalidFields = true )
+@ConfigurationProperties( prefix = "openlayers.config", ignoreInvalidFields = true )
 class OpenLayersConfig
 {
 	List<OpenLayersLayer> baseMaps

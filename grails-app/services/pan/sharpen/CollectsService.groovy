@@ -14,6 +14,8 @@ import static geoscript.style.Symbolizers.*
 
 class CollectsService
 {
+	GeoscriptConfig geoscriptConfig
+	
 	@Value('${collects.databaseName}')
 	String databaseName
 	

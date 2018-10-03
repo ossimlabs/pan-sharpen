@@ -135,28 +135,29 @@ server:
 
 ---
 openlayers:
-    baseMaps:
-    -   layerType: "tilewms"
-        title: "OSM Basic"
-        url: "https://omar-dev.ossim.io/omar-mapproxy/service"
-        params:
-            LAYERS: "o2-basemap-basic"
-            FORMAT: "image/jpeg"
-        options:
-            visible: true
-    # Uncomment the example below, and modify to add
-    # a custom overlay layer
-    overlays:
-    -   layerType: "tilewms"
-        title: "Collects"
-        url: "/collects/getTile"
-        params:
-            LAYERS: "collects"
-            FORMAT: "image/png"
-            VERSION: "1.1.1"
-        options:
-            visible: true
-    zoomFilterChangeLevel: 10
+    config:
+        baseMaps:
+        -   layerType: "tilewms"
+            title: "OSM Basic"
+            url: "https://omar-dev.ossim.io/omar-mapproxy/service"
+            params:
+                LAYERS: "o2-basemap-basic"
+                FORMAT: "image/jpeg"
+            options:
+                visible: true
+        # Uncomment the example below, and modify to add
+        # a custom overlay layer
+        overlays:
+        -   layerType: "tilewms"
+            title: "Collects"
+            url: "/collects/getTile"
+            params:
+                LAYERS: "collects"
+                FORMAT: "image/png"
+                VERSION: "1.1.1"
+            options:
+                visible: true
+        zoomFilterChangeLevel: 10
 
 aws:
     profileName: "svc_radiant_omar_1b"
@@ -164,3 +165,32 @@ aws:
 
 collects:
     databaseName: 'dg-bucket-db-prod'
+
+geoscript:
+    config:
+        namespaces:
+            - prefix: omar
+              uri: http://omar.ossim.io
+            - prefix: dg
+              uri: http://digitalglobe.com
+        workspaces:
+            - name: 'dg-bucket-db-prod'
+              namespaceId: dg
+              params:
+                dbtype: postgis
+                host: localhost
+                port: 5432
+                database:  'dg-bucket-db-prod'
+                user: postgres
+                passwd: postgres
+                'Expose primary keys': true
+                namespace: http://digitalglobe.com
+        layers:
+            - name: collects
+              title: collects
+              description: ''
+              keywords:
+                  - 'dg'
+                  - 'wv4'
+                  - 'pan sharpen'
+              workspaceId: 'dg-bucket-db-prod'

@@ -5,8 +5,9 @@ import org.geotools.factory.Hints
 
 class BootStrap
 {
-	def bucketService
+//	def bucketService
 	def openLayersConfig
+	def geoscriptConfig
 	
 	def init = { servletContext ->
 		Init.instance().initialize()
@@ -17,6 +18,8 @@ class BootStrap
 //		}
 		
 		println openLayersConfig
+		println geoscriptConfig
+		
 	}
 	def destroy = {
 	}
