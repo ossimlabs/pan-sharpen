@@ -1,196 +1,196 @@
 ---
 grails:
-    servlet:
-        version: 3.0
-    profile: web
-    codegen:
-        defaultPackage: pan.sharpen
-    gorm:
-        reactor:
-            # Whether to translate GORM events into Reactor events
-            # Disabled by default for performance reasons
-            events: false
+  servlet:
+    version: 3.0
+  profile: web
+  codegen:
+    defaultPackage: pan.sharpen
+  gorm:
+    reactor:
+      # Whether to translate GORM events into Reactor events
+      # Disabled by default for performance reasons
+      events: false
 info:
-    app:
-        name: '@info.app.name@'
-        version: '@info.app.version@'
-        grailsVersion: '@info.app.grailsVersion@'
+  app:
+    name: '@info.app.name@'
+    version: '@info.app.version@'
+    grailsVersion: '@info.app.grailsVersion@'
 spring:
-    main:
-        banner-mode: "off"
-    groovy:
-        template:
-            check-template-location: false
+  main:
+    banner-mode: "off"
+  groovy:
+    template:
+      check-template-location: false
 
 # Spring Actuator Endpoints are Disabled by Default
 endpoints:
-    enabled: false
-    jmx:
-        enabled: true
+  enabled: false
+  jmx:
+    enabled: true
 
 ---
 grails:
-    mime:
-        disable:
-            accept:
-                header:
-                    userAgents:
-                        - Gecko
-                        - WebKit
-                        - Presto
-                        - Trident
-        types:
-            all: '*/*'
-            atom: application/atom+xml
-            css: text/css
-            csv: text/csv
-            form: application/x-www-form-urlencoded
-            html:
-              - text/html
-              - application/xhtml+xml
-            js: text/javascript
-            json:
-              - application/json
-              - text/json
-            multipartForm: multipart/form-data
-            pdf: application/pdf
-            rss: application/rss+xml
-            text: text/plain
-            hal:
-              - application/hal+json
-              - application/hal+xml
-            xml:
-              - text/xml
-              - application/xml
-    urlmapping:
-        cache:
-            maxsize: 1000
-    controllers:
-        defaultScope: singleton
-    converters:
-        encoding: UTF-8
-    views:
-        default:
-            codec: html
-        gsp:
-            encoding: UTF-8
-            htmlcodec: xml
-            codecs:
-                expression: html
-                scriptlets: html
-                taglib: none
-                staticparts: none
+  mime:
+    disable:
+      accept:
+        header:
+          userAgents:
+          - Gecko
+          - WebKit
+          - Presto
+          - Trident
+    types:
+      all: '*/*'
+      atom: application/atom+xml
+      css: text/css
+      csv: text/csv
+      form: application/x-www-form-urlencoded
+      html:
+      - text/html
+      - application/xhtml+xml
+      js: text/javascript
+      json:
+      - application/json
+      - text/json
+      multipartForm: multipart/form-data
+      pdf: application/pdf
+      rss: application/rss+xml
+      text: text/plain
+      hal:
+      - application/hal+json
+      - application/hal+xml
+      xml:
+      - text/xml
+      - application/xml
+  urlmapping:
+    cache:
+      maxsize: 1000
+  controllers:
+    defaultScope: singleton
+  converters:
+    encoding: UTF-8
+  views:
+    default:
+      codec: html
+    gsp:
+      encoding: UTF-8
+      htmlcodec: xml
+      codecs:
+        expression: html
+        scriptlets: html
+        taglib: none
+        staticparts: none
 endpoints:
-    jmx:
-        unique-names: true
+  jmx:
+    unique-names: true
 
 ---
 hibernate:
-    cache:
-        queries: false
-        use_second_level_cache: false
-        use_query_cache: false
+  cache:
+    queries: false
+    use_second_level_cache: false
+    use_query_cache: false
 dataSource:
-    pooled: true
-    jmxExport: true
-    driverClassName: org.postgresql.Driver
-    dialect: org.hibernate.spatial.dialect.postgis.PostgisDialect
-    username: postgres
-    password: postgres
+  pooled: true
+  jmxExport: true
+  driverClassName: org.postgresql.Driver
+  dialect: org.hibernate.spatial.dialect.postgis.PostgisDialect
+  username: postgres
+  password: postgres
 
 environments:
-    development:
-        dataSource:
-            dbCreate: create-drop
-            url: jdbc:postgresql:dg-bucket-db-dev
-    test:
-        dataSource:
-            dbCreate: update
-            url: jdbc:postgresql:dg-bucket-db-test
-    production:
-        dataSource:
-            dbCreate: none
-            url: jdbc:postgresql:dg-bucket-db-prod
-            properties:
-                jmxEnabled: true
-                initialSize: 5
-                maxActive: 50
-                minIdle: 5
-                maxIdle: 25
-                maxWait: 10000
-                maxAge: 600000
-                timeBetweenEvictionRunsMillis: 5000
-                minEvictableIdleTimeMillis: 60000
-                validationQuery: SELECT 1
-                validationQueryTimeout: 3
-                validationInterval: 15000
-                testOnBorrow: true
-                testWhileIdle: true
-                testOnReturn: false
-                jdbcInterceptors: ConnectionState
-                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+  development:
+    dataSource:
+      dbCreate: create-drop
+      url: jdbc:postgresql:dg-bucket-db-dev
+  test:
+    dataSource:
+      dbCreate: update
+      url: jdbc:postgresql:dg-bucket-db-test
+  production:
+    dataSource:
+      dbCreate: none
+      url: jdbc:postgresql:dg-bucket-db-prod
+      properties:
+        jmxEnabled: true
+        initialSize: 5
+        maxActive: 50
+        minIdle: 5
+        maxIdle: 25
+        maxWait: 10000
+        maxAge: 600000
+        timeBetweenEvictionRunsMillis: 5000
+        minEvictableIdleTimeMillis: 60000
+        validationQuery: SELECT 1
+        validationQueryTimeout: 3
+        validationInterval: 15000
+        testOnBorrow: true
+        testWhileIdle: true
+        testOnReturn: false
+        jdbcInterceptors: ConnectionState
+        defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
 ---
 server:
-    port: 7777
+  port: 7777
 
 ---
 openlayers:
-    config:
-        baseMaps:
-        -   layerType: "tilewms"
-            title: "OSM Basic"
-            url: "https://omar-dev.ossim.io/omar-mapproxy/service"
-            params:
-                LAYERS: "o2-basemap-basic"
-                FORMAT: "image/jpeg"
-            options:
-                visible: true
-        # Uncomment the example below, and modify to add
-        # a custom overlay layer
-        overlays:
-        -   layerType: "tilewms"
-            title: "Collects"
-            url: "/collects/getTile"
-            params:
-                LAYERS: "collects"
-                FORMAT: "image/png"
-                VERSION: "1.1.1"
-            options:
-                visible: true
-        zoomFilterChangeLevel: 10
+  config:
+    baseMaps:
+    - layerType: "tilewms"
+      title: "OSM Basic"
+      url: "https://omar-dev.ossim.io/omar-mapproxy/service"
+      params:
+        LAYERS: "o2-basemap-basic"
+        FORMAT: "image/jpeg"
+      options:
+        visible: true
+    # Uncomment the example below, and modify to add
+    # a custom overlay layer
+    overlays:
+    - layerType: "tilewms"
+      title: "Collects"
+      url: "/collects/getTile"
+      params:
+        LAYERS: "collects"
+        FORMAT: "image/png"
+        VERSION: "1.1.1"
+      options:
+        visible: true
+    zoomFilterChangeLevel: 10
 
 aws:
-    profileName: "svc_radiant_omar_1b"
-    bucketName: "dg-1b-3090-t1"
+  profileName: "svc_radiant_omar_1b"
+  bucketName: "dg-1b-3090-t1"
 
 collects:
-    databaseName: 'dg-bucket-db-prod'
+  databaseName: 'dg-bucket-db-prod'
 
 geoscript:
-    config:
-        namespaces:
-            - prefix: omar
-              uri: http://omar.ossim.io
-            - prefix: dg
-              uri: http://digitalglobe.com
-        workspaces:
-            - name: 'dg-bucket-db-prod'
-              namespaceId: dg
-              params:
-                dbtype: postgis
-                host: localhost
-                port: 5432
-                database:  'dg-bucket-db-prod'
-                user: postgres
-                passwd: postgres
-                'Expose primary keys': true
-                namespace: http://digitalglobe.com
-        layers:
-            - name: collects
-              title: collects
-              description: ''
-              keywords:
-                  - 'dg'
-                  - 'wv4'
-                  - 'pan sharpen'
-              workspaceId: 'dg-bucket-db-prod'
+  config:
+    namespaces:
+    - prefix: omar
+      uri: http://omar.ossim.io
+    - prefix: dg
+      uri: http://digitalglobe.com
+    workspaces:
+    - name: 'dg-bucket-db-prod'
+      namespaceId: dg
+      params:
+        dbtype: postgis
+        host: localhost
+        port: 5432
+        database:  'dg-bucket-db-prod'
+        user: postgres
+        passwd: postgres
+        'Expose primary keys': true
+        namespace: http://digitalglobe.com
+    layers:
+    - name: collects
+      title: collects
+      description: ''
+      keywords:
+      - 'dg'
+      - 'wv4'
+      - 'pan sharpen'
+      workspaceId: 'dg-bucket-db-prod'

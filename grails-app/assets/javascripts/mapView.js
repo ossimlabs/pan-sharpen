@@ -41,7 +41,8 @@ var MapView = (function() {
                     url: '/wms/getMap',
                     params: {
 //                      'LAYERS': '/data/psm-test/5V090205M0001912264B220000100072M_001508507.ntf',
-                      'LAYERS': '/data/I00000116845_01/I00000116845_01_P001_MUL/18AUG30143528-M1BS_R2C1-I00000116845_01_P001.TIF',
+//                      'LAYERS': '/data/I00000116845_01/I00000116845_01_P001_MUL/18AUG30143528-M1BS_R2C1-I00000116845_01_P001.TIF',
+                         'LAYERS': '/data/drew/ftp2.digitalglobe.com/502589640010_01/DVD_VOL_1/502589640010_01/502589640010_01_P001_MUL/18OCT19061610-M1BS-502589640010_01_P001.NTF',
                       'VERSION': '1.1.1',
                       'FORMAT': 'image/png'
                     }
@@ -54,7 +55,8 @@ var MapView = (function() {
                     url: '/wms/getMap',
                     params: {
 //                      'LAYERS': '/data/psm-test/5V090205P0001912264B220000100282M_001508507.ntf',
-                      'LAYERS': '/data/I00000116845_01/I00000116845_01_P001_PAN/18AUG30143528-P1BS_R2C1-I00000116845_01_P001.TIF',
+//                      'LAYERS': '/data/I00000116845_01/I00000116845_01_P001_PAN/18AUG30143528-P1BS_R2C1-I00000116845_01_P001.TIF',
+                      'LAYERS': '/data/drew/ftp2.digitalglobe.com/502589640010_01/DVD_VOL_1/502589640010_01/502589640010_01_P001_PAN/18OCT19061610-P1BS-502589640010_01_P001.NTF',
                       'VERSION': '1.1.1',
                       'FORMAT': 'image/png'
                     }
@@ -67,7 +69,8 @@ var MapView = (function() {
                     url: '/wms/getPSM',
                     params: {
 //                      'LAYERS': '/data/psm-test/5V090205M0001912264B220000100072M_001508507.ntf,/data/psm-test/5V090205P0001912264B220000100282M_001508507.ntf',
-                      'LAYERS': '/data/I00000116845_01/I00000116845_01_P001_MUL/18AUG30143528-M1BS_R2C1-I00000116845_01_P001.TIF,/data/I00000116845_01/I00000116845_01_P001_PAN/18AUG30143528-P1BS_R2C1-I00000116845_01_P001.TIF',
+//                      'LAYERS': '/data/I00000116845_01/I00000116845_01_P001_MUL/18AUG30143528-M1BS_R2C1-I00000116845_01_P001.TIF,/data/I00000116845_01/I00000116845_01_P001_PAN/18AUG30143528-P1BS_R2C1-I00000116845_01_P001.TIF',
+                        'LAYERS': '/data/drew//ftp2.digitalglobe.com/502589640010_01/DVD_VOL_1/502589640010_01/502589640010_01_P001_MUL/18OCT19061610-M1BS-502589640010_01_P001.NTF,/data/drew/ftp2.digitalglobe.com/502589640010_01/DVD_VOL_1/502589640010_01/502589640010_01_P001_PAN/18OCT19061610-P1BS-502589640010_01_P001.NTF',
                       'VERSION': '1.1.1',
                       'FORMAT': 'image/png'
                     }

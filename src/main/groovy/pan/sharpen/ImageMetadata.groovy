@@ -1,43 +1,45 @@
 package pan.sharpen
 
+import groovy.transform.ToString
+import groovy.util.slurpersupport.GPathResult
+import joms.oms.DataInfo
+import com.vividsolutions.jts.geom.Geometry
+import com.vividsolutions.jts.io.WKTReader
+
+@ToString( includeNames = true )
 class ImageMetadata
 {
-	Properties metadata = new Properties()
+	Geometry geometry
+	String srs
+	int numberOfBands
+	
+	GPathResult oms
 	
 	ImageMetadata( String imageFilename )
 	{
-		def cmd = "ossim-info ${ imageFilename }"
-		def results = cmd.execute().text
+		oms = new XmlSlurper().parseText( DataInfo.readInfo( imageFilename ) )
 		
-		results.eachLine { line ->
-			if ( line )
-			{
-				def keyValue = line.split( ':' )
-				metadata[keyValue[0].trim()] = keyValue[1]
-			}
-		}
+		def rasterEntryNode = oms.dataSets.RasterDataSet.rasterEntries.RasterEntry
+		def wkt = rasterEntryNode.groundGeom.text()
+		def wktReader = new WKTReader()
+		
+		srs = rasterEntryNode.groundGeom.@srs.text()
+		geometry = wktReader.read( wkt )
+		
+		numberOfBands = rasterEntryNode.numberOfBands.text().toInteger()
 	}
 	
 	def getExtent( Integer entryId = 0 )
 	{
-		def llLon = metadata["image${ entryId }.geometry.ll_lon"].toDouble()
-		def llLat = metadata["image${ entryId }.geometry.ll_lat"].toDouble()
-		def urLon = metadata["image${ entryId }.geometry.ur_lon"].toDouble()
-		def urLat = metadata["image${ entryId }.geometry.ur_lat"].toDouble()
+		def envelope = geometry.envelopeInternal
 		
-		[ Math.min( llLon, urLon ),
-			Math.min( llLat, urLat ),
-			Math.max( llLon, urLon ),
-			Math.max( llLat, urLat ) ]
+		[ envelope.minX, envelope.minY, envelope.maxX, envelope.maxY ]
 	}
 	
+/*
 	def getRgbBands( Integer entryId = 0 )
 	{
 		metadata["image${ entryId }.rgb_bands"]
 	}
-	
-	def getNumberOfBands( Integer entryId = 0 )
-	{
-		metadata["image${ entryId }.number_output_bands"]?.toInteger()
-	}
+*/
 }
