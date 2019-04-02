@@ -35,7 +35,7 @@ node("${BUILD_NODE}"){
             gradle assemble \
                 -PossimMavenProxy=${OSSIM_MAVEN_PROXY}
             """
-            archiveArtifacts "apps/*/build/libs/*.jar"
+            archiveArtifacts "build/libs/*.jar"
         }
 
         stage ("Publish Docker App")
