@@ -131,7 +131,7 @@ environments:
         defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
 ---
 server:
-  port: 7777
+  port: 8080
 
 ---
 openlayers:
